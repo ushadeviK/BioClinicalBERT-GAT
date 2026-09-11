@@ -2,17 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: dark light;
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased min-h-screen overflow-x-hidden;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-950;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+  }
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* Glassmorphism utility classes */
+.glass-panel {
+  @apply bg-slate-900/40 backdrop-blur-md border border-slate-800/60;
+}
+
+.glass-panel-hover {
+  @apply hover:bg-slate-900/60 hover:border-slate-700/60 transition-all duration-300;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-violet-400 to-indigo-300;
+}
+
+/* GAT Pulse Animations */
+@keyframes signal-flow {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-signal {
+  stroke-dasharray: 8 4;
+  animation: signal-flow 2s linear infinite;
 }
