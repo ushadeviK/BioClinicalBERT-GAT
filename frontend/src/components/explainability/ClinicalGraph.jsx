@@ -15,11 +15,10 @@ export default function ClinicalGraph({ graphEvidence, prediction }) {
   const width = 500;
   const height = 300;
 
-  // Extract unique symptoms from edges
+  // Extract unique symptoms from all edges (ignoring Patient and Disease nodes)
   const symptoms = Array.from(new Set(
-    graphEvidence
-      .filter(edge => edge.relation === 'has symptom')
-      .map(edge => edge.target)
+    graphEvidence.flatMap(edge => [edge.source, edge.target])
+      .filter(node => node !== 'Patient' && node !== prediction)
   ));
 
   // If no symptoms parsed, fall back to warning message

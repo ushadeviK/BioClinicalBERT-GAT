@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Activity, 
-  PlusCircle, 
-  Clock, 
-  Menu, 
+import {
+  Activity,
+  PlusCircle,
+  Clock,
+  Menu,
   X,
   Info,
   Settings,
@@ -29,8 +29,7 @@ export default function MobileNav({ isOpen, setIsOpen }) {
               key={tab.path}
               to={tab.path}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-1 py-1 transition-all ${
-                  isActive ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'
+                `flex flex-col items-center gap-1 py-1 transition-all ${isActive ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'
                 }`
               }
             >
@@ -39,13 +38,12 @@ export default function MobileNav({ isOpen, setIsOpen }) {
             </NavLink>
           );
         })}
-        
+
         {/* Menu Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex flex-col items-center gap-1 py-1 transition-all ${
-            isOpen ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-350'
-          }`}
+          className={`flex flex-col items-center gap-1 py-1 transition-all ${isOpen ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-350'
+            }`}
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           <span className="text-[10px] font-medium font-mono uppercase tracking-wider">Menu</span>
@@ -54,17 +52,16 @@ export default function MobileNav({ isOpen, setIsOpen }) {
 
       {/* Drawer Overlay Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 sm:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Drawer Sidebar Menu */}
-      <div 
-        className={`fixed top-0 bottom-0 left-0 w-64 bg-slate-950 border-r border-slate-900 z-50 transform transition-transform duration-300 ease-in-out sm:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+      <div
+        className={`fixed top-0 bottom-0 left-0 w-64 bg-slate-950 border-r border-slate-900 z-50 transform transition-transform duration-300 ease-in-out sm:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex flex-col h-full py-6 px-4 justify-between">
           <div>
@@ -96,10 +93,9 @@ export default function MobileNav({ isOpen, setIsOpen }) {
                     to={item.path}
                     onClick={() => setIsOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                        isActive 
-                          ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' 
-                          : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/40'
+                      `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive
+                        ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/40'
                       }`
                     }
                   >

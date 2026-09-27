@@ -11,7 +11,7 @@ export default function ModelInfo() {
     { label: 'Confidence Calibration', value: 'Temperature Scaling (ECE Optimization)' },
     { label: 'Explainable AI methods', value: 'SHAP (Attribution) + Attention Edge Weights' },
     { label: 'Deep Learning Backend', value: 'PyTorch v2.1.2 + PyTorch Geometric' },
-    { label: 'Training Hardware', value: 'NVIDIA RTX A5000 (CUDA 11.8)' }
+    { label: 'Training Hardware', value: 'Google Colab (Tesla T4 GPU)' }
   ];
 
   return (

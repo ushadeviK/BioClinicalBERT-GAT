@@ -8,13 +8,14 @@ import {
   ChevronLeft,
   ChevronRight,
   PlusCircle,
-  FileText
+  FileText,
+  Paperclip
 } from 'lucide-react';
 import { useHistory } from '../hooks/useHistory';
 
 export default function History() {
   const navigate = useNavigate();
-  const { history, clearHistory } = useHistory();
+  const { history, clearHistory, deleteHistoryItem } = useHistory();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterConfidence, setFilterConfidence] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +23,10 @@ export default function History() {
 
   // Filter history runs
   const filteredHistory = history.filter(item => {
-    const matchesSearch = item.prediction.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = 
+      item.prediction.toLowerCase().includes(searchLower) ||
+      (item.patient_id && item.patient_id.toLowerCase().includes(searchLower));
     const matchesFilter = filterConfidence === 'All' || item.confidence === filterConfidence;
     return matchesSearch && matchesFilter;
   });
@@ -97,7 +101,7 @@ export default function History() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <input
                 type="text"
-                placeholder="Search predictions (e.g. Asthma)..."
+                placeholder="Search by Patient ID or Disease..."
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -131,13 +135,14 @@ export default function History() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="border-b border-slate-900 bg-slate-950/30 text-slate-500 font-mono text-[10px] uppercase">
-                  <th className="p-4 font-semibold">Date</th>
-                  <th className="p-4 font-semibold">Prediction Output</th>
-                  <th className="p-4 font-semibold text-center">Probability</th>
-                  <th className="p-4 font-semibold text-center">Confidence Level</th>
-                  <th className="p-4 font-semibold">Model Pipeline</th>
-                  <th className="p-4 font-semibold text-right">Action</th>
+                <tr className="border-b border-slate-800 bg-slate-900/80 text-slate-300 font-sans text-xs font-bold uppercase tracking-wider shadow-sm">
+                  <th className="p-4">Date</th>
+                  <th className="p-4">Patient ID</th>
+                  <th className="p-4">Age</th>
+                  <th className="p-4">Gender</th>
+                  <th className="p-4">Prediction Output</th>
+                  <th className="p-4 text-center">Confidence Level</th>
+                  <th className="p-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-900">
@@ -145,9 +150,28 @@ export default function History() {
                   paginatedItems.map((item) => (
                     <tr key={item.id} className="hover:bg-slate-900/10 transition-colors">
                       <td className="p-4 text-slate-400 text-xs font-mono">{item.date}</td>
-                      <td className="p-4 font-bold text-slate-100 uppercase tracking-wide">{item.prediction}</td>
-                      <td className="p-4 text-center font-semibold text-slate-300">
-                        {(item.probability * 100).toFixed(1)}%
+                      <td className="p-4">
+                        <div className="font-mono font-medium text-slate-200">
+                          {item.patient_id || 'N/A'}
+                        </div>
+                        {item.has_file && (
+                          <div className="flex items-center gap-1 mt-1 text-[10px] text-slate-500 font-sans tracking-wide">
+                            <FileText className="h-3 w-3 text-indigo-400/70" />
+                            <span>Includes medical reports</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-4 text-xs text-slate-400 font-mono uppercase tracking-wider">
+                        {item.age ? `${item.age} YRS` : '-'}
+                      </td>
+                      <td className="p-4 text-xs text-slate-400 capitalize font-medium">
+                        {item.gender || '-'}
+                      </td>
+                      <td className="p-4 font-bold text-slate-100 uppercase tracking-wide">
+                        {item.prediction}
+                        <span className="block text-[10px] text-slate-500 font-medium normal-case mt-0.5">
+                          {(item.probability * 100).toFixed(1)}% Probability
+                        </span>
                       </td>
                       <td className="p-4 text-center">
                         <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold font-mono tracking-wider ${
@@ -158,15 +182,27 @@ export default function History() {
                           {item.confidence}
                         </span>
                       </td>
-                      <td className="p-4 text-xs font-mono text-slate-450">{item.model}</td>
                       <td className="p-4 text-right">
-                        <button
-                          onClick={() => navigate(`/results/${item.id}`)}
-                          className="text-xs text-indigo-400 hover:text-indigo-300 font-medium hover:underline inline-flex items-center gap-1"
-                        >
-                          <FileText className="h-3.5 w-3.5" />
-                          <span>View Detail</span>
-                        </button>
+                        <div className="flex items-center justify-end gap-3">
+                          <button
+                            onClick={() => navigate(`/results/${item.id}`)}
+                            className="text-xs text-indigo-400 hover:text-indigo-300 font-medium hover:underline inline-flex items-center gap-1"
+                          >
+                            <FileText className="h-3.5 w-3.5" />
+                            <span>View Detail</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (window.confirm('Are you sure you want to delete this record?')) {
+                                deleteHistoryItem(item.id);
+                              }
+                            }}
+                            className="text-slate-500 hover:text-red-400 transition-colors"
+                            title="Delete Record"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

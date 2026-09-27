@@ -43,12 +43,30 @@ export default function SymptomSelector({ selectedSymptoms, setSelectedSymptoms 
       <div className="relative">
         <div 
           onClick={() => setIsOpen(true)}
-          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 focus-within:border-indigo-500/80 transition-all cursor-text min-h-[42px]"
+          className="w-full flex flex-wrap items-center gap-2 px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-800 focus-within:border-indigo-500/80 transition-all cursor-text min-h-[42px]"
         >
-          <Search className="h-4.5 w-4.5 text-slate-500 shrink-0" />
+          <Search className="h-4 w-4 text-slate-500 shrink-0" />
+          
+          {/* Selected Chips inside input */}
+          {selectedSymptoms.map((symptom) => (
+            <span
+              key={symptom}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-500/30 text-[11px] font-medium text-indigo-300"
+            >
+              <span>{symptom}</span>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); toggleSymptom(symptom); }}
+                className="text-indigo-400/70 hover:text-indigo-300 focus:outline-none transition-colors"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+
           <input
             type="text"
-            placeholder={selectedSymptoms.length > 0 ? "Add more symptoms..." : "Search symptoms..."}
+            placeholder={selectedSymptoms.length > 0 ? "Add more..." : "Search symptoms..."}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -57,7 +75,7 @@ export default function SymptomSelector({ selectedSymptoms, setSelectedSymptoms 
             onFocus={() => setIsOpen(true)}
             className="bg-transparent border-0 outline-none p-0 text-sm text-slate-100 placeholder-slate-500 flex-1 min-w-[120px] focus:ring-0"
           />
-          <ChevronDown className="h-4 w-4 text-slate-500 shrink-0 cursor-pointer" />
+          <ChevronDown className="h-4 w-4 text-slate-500 shrink-0 cursor-pointer ml-auto" />
         </div>
 
         {/* Suggestion Dropdown */}
@@ -69,7 +87,7 @@ export default function SymptomSelector({ selectedSymptoms, setSelectedSymptoms 
                   <button
                     key={symptom}
                     type="button"
-                    onClick={() => toggleSymptom(symptom)}
+                    onClick={(e) => { e.stopPropagation(); toggleSymptom(symptom); }}
                     className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-indigo-500/10 hover:text-indigo-400 rounded-md transition-colors"
                   >
                     {symptom}
@@ -84,27 +102,6 @@ export default function SymptomSelector({ selectedSymptoms, setSelectedSymptoms 
           </div>
         )}
       </div>
-
-      {/* Selected Chips */}
-      {selectedSymptoms.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1">
-          {selectedSymptoms.map((symptom) => (
-            <span
-              key={symptom}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs font-medium text-slate-200"
-            >
-              <span>{symptom}</span>
-              <button
-                type="button"
-                onClick={() => toggleSymptom(symptom)}
-                className="text-slate-500 hover:text-slate-200 focus:outline-none transition-colors"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

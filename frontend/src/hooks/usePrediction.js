@@ -27,14 +27,25 @@ export function usePrediction() {
 
       const response = await predictionApi.predict(requestData);
       
-      // Save result to sessionStorage so it can be queried by ID
-      const savedPredictions = JSON.parse(sessionStorage.getItem('clinai_predictions_data') || '{}');
-      savedPredictions[response.request_id] = response;
-      sessionStorage.setItem('clinai_predictions_data', JSON.stringify(savedPredictions));
+      // Merge input data with response so that Results page has access to patient details
+      const completeResult = {
+        ...response,
+        patient_id: requestData.patient_id,
+        age: requestData.age,
+        gender: requestData.gender,
+        symptoms: requestData.symptoms,
+        vitals: requestData.vitals,
+        clinical_text: requestData.clinical_text
+      };
 
-      setResult(response);
+      // Save result to localStorage so it can be queried by ID
+      const savedPredictions = JSON.parse(localStorage.getItem('clinai_predictions_data') || '{}');
+      savedPredictions[response.request_id] = completeResult;
+      localStorage.setItem('clinai_predictions_data', JSON.stringify(savedPredictions));
+
+      setResult(completeResult);
       setLoading(false);
-      return response;
+      return completeResult;
     } catch (err) {
       setLoading(false);
       const userMessage = err.message || 'Unable to complete the prediction. The prediction service may be temporarily unavailable. Please try again.';
@@ -46,7 +57,7 @@ export function usePrediction() {
   // Retrieve details of a prediction by ID
   const getPredictionById = useCallback((id) => {
     try {
-      const savedPredictions = JSON.parse(sessionStorage.getItem('clinai_predictions_data') || '{}');
+      const savedPredictions = JSON.parse(localStorage.getItem('clinai_predictions_data') || '{}');
       return savedPredictions[id] || null;
     } catch (e) {
       console.error('Failed to retrieve prediction detail', e);

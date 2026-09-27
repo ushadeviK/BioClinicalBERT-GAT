@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Activity, 
-  PlusCircle, 
-  Clock, 
-  Layers, 
-  Info, 
+import {
+  Activity,
+  PlusCircle,
+  Clock,
+  Layers,
+  Info,
   Settings,
   BrainCircuit
 } from 'lucide-react';
@@ -17,7 +17,6 @@ export default function Sidebar({ className = "" }) {
     { path: '/history', label: 'History', icon: Clock },
     { path: '/model', label: 'Model Info', icon: Layers },
     { path: '/about', label: 'About', icon: Info },
-    { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
   return (
@@ -38,7 +37,7 @@ export default function Sidebar({ className = "" }) {
 
         {/* Prototype Warning Badge */}
         <div className="mt-4 px-2.5 py-1 rounded bg-indigo-500/5 border border-indigo-500/20 text-indigo-400 text-[10px] font-mono inline-block">
-          AI Research Prototype
+          Model Version: v1.0
         </div>
       </div>
 
@@ -51,10 +50,9 @@ export default function Sidebar({ className = "" }) {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  isActive 
-                    ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' 
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/40'
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive
+                  ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/40'
                 }`
               }
             >

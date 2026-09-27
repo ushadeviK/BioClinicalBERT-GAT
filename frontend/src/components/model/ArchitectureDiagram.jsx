@@ -63,10 +63,10 @@ export default function ArchitectureDiagram() {
                 : (isHovered ? 'stroke-indigo-400' : 'stroke-slate-800');
 
             const fillCol = node.type === 'text'
-              ? 'fill-indigo-950/10'
+              ? 'fill-indigo-900/40'
               : node.type === 'graph'
-                ? 'fill-violet-950/10'
-                : 'fill-slate-900/30';
+                ? 'fill-violet-900/40'
+                : 'fill-slate-800/40';
 
             return (
               <g 
@@ -89,8 +89,8 @@ export default function ArchitectureDiagram() {
                 <text
                   x={node.x + node.w / 2}
                   y={node.y + node.h / 2 + 4}
-                  className={`text-[10px] font-bold font-mono text-center text-slate-200 transition-colors ${
-                    isHovered ? 'text-white' : ''
+                  className={`text-[10px] font-bold font-mono text-center fill-slate-300 transition-colors ${
+                    isHovered ? 'fill-white' : ''
                   }`}
                   textAnchor="middle"
                 >

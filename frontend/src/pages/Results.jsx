@@ -7,7 +7,11 @@ import {
   HelpCircle,
   FileText,
   Activity,
-  Plus
+  Plus,
+  User,
+  Thermometer,
+  Stethoscope,
+  HeartPulse
 } from 'lucide-react';
 import { usePrediction } from '../hooks/usePrediction';
 import ProbabilityChart from '../components/prediction/ProbabilityChart';
@@ -54,7 +58,10 @@ export default function Results() {
     );
   }
 
-  const { prediction, probability, confidence, probabilities, calibration } = data;
+  const { 
+    prediction, probability, confidence, probabilities, 
+    patient_id, age, gender, symptoms = [], vitals = {}
+  } = data;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
@@ -129,12 +136,50 @@ export default function Results() {
             </div>
           </div>
 
-          {/* Calibration explanation */}
-          <ConfidenceCard 
-            calibration={calibration} 
-            confidence={confidence} 
-            probability={probability} 
-          />
+          {/* Patient Profile & Clinical Summary */}
+          <div className="glass-panel p-6 rounded-xl space-y-6">
+            <div className="flex items-center gap-2 border-b border-slate-900 pb-4">
+              <div className="h-8 w-8 rounded bg-indigo-500/20 flex items-center justify-center">
+                <User className="h-4 w-4 text-indigo-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-100 uppercase tracking-wider font-mono">Patient Profile</h3>
+                <p className="text-xs text-slate-500 font-mono">ID: {patient_id || 'N/A'}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <span className="block text-[10px] text-slate-500 font-mono uppercase">Age / Gender</span>
+                <span className="text-sm font-semibold text-slate-300 capitalize">{age ? `${age} yrs` : '-'} / {gender || '-'}</span>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slate-500 font-mono uppercase">SpO2</span>
+                <span className="text-sm font-semibold text-slate-300">{vitals.spo2 ? `${vitals.spo2}%` : '-'}</span>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slate-500 font-mono uppercase">Temperature</span>
+                <span className="text-sm font-semibold text-slate-300">{vitals.temperature ? `${vitals.temperature}°F` : '-'}</span>
+              </div>
+              <div>
+                <span className="block text-[10px] text-slate-500 font-mono uppercase">Blood Pressure</span>
+                <span className="text-sm font-semibold text-slate-300">{vitals.bloodPressure || '-'}</span>
+              </div>
+            </div>
+
+            {symptoms.length > 0 && (
+              <div className="pt-2">
+                <span className="block text-[10px] text-slate-500 font-mono uppercase mb-2">Key Symptoms</span>
+                <div className="flex flex-wrap gap-2">
+                  {symptoms.map(sym => (
+                    <span key={sym} className="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-xs text-slate-300">
+                      {sym}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right Column: Probabilities Chart */}
